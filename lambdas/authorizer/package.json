@@ -1,0 +1,9 @@
+{
+  "name": "telemed-authorizer",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "aws-jwt-verify": "^4.0.1"
+  }
+}

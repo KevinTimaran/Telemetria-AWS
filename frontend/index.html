@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TeleMed · Expedientes</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>TeleMed</h1>
+    <span id="environment"></span>
+    <span id="who"></span>
+    <button id="logout" class="hidden">Salir</button>
+  </header>
+
+  <main>
+    <!-- LOGIN -->
+    <section id="login-view" class="card">
+      <h2>Iniciar sesión</h2>
+      <p id="local-help" class="local-help hidden">
+        Modo local: usa cualquier correo y contraseña. Los datos se guardan
+        solamente en este navegador.
+      </p>
+      <form id="login-form">
+        <label>Soy
+          <select id="login-role">
+            <option value="paciente">Paciente</option>
+            <option value="medico">Médico</option>
+          </select>
+        </label>
+        <label>Correo <input id="login-email" type="email" required /></label>
+        <label>Contraseña <input id="login-pass" type="password" required /></label>
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <!-- PACIENTE -->
+    <section id="paciente-view" class="hidden">
+      <div class="card">
+        <h2>Subir documento</h2>
+        <form id="upload-form">
+          <label>Tipo
+            <select id="doc-type">
+              <option value="imagen_diagnostica">Imagen diagnóstica (URL de 5 min)</option>
+              <option value="informe">Informe PDF (URL de 1 hora)</option>
+            </select>
+          </label>
+          <input id="file" type="file" accept=".pdf,.jpg,.jpeg,.png,.dcm" required />
+          <button type="submit">Subir cifrado</button>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Autorizar a un médico</h2>
+        <form id="consent-form">
+          <label>ID (sub) del médico <input id="doctor-id" required placeholder="uuid" /></label>
+          <button type="submit">Autorizar</button>
+        </form>
+        <p class="muted">Tu ID de paciente: <code id="my-sub"></code></p>
+      </div>
+      <div class="card">
+        <h2>Mis documentos <button id="refresh" class="small">↻</button></h2>
+        <table id="my-docs"></table>
+      </div>
+    </section>
+
+    <!-- MÉDICO -->
+    <section id="medico-view" class="hidden">
+      <div class="card">
+        <h2>Expediente del paciente</h2>
+        <form id="patient-form">
+          <label>ID (sub) del paciente <input id="patient-id" required placeholder="uuid" /></label>
+          <button type="submit">Consultar</button>
+        </form>
+        <p class="muted">Tu ID de médico (compártelo con el paciente): <code id="doc-sub"></code></p>
+        <table id="patient-docs"></table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Claims del token</h2>
+      <pre id="claims">—</pre>
+      <pre id="log"></pre>
+    </section>
+  </main>
+</body>
+</html>

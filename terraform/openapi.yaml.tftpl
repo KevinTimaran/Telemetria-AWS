@@ -1,0 +1,95 @@
+openapi: "3.0.1"
+info:
+  title: "${api_name}"
+  version: "1.0"
+
+components:
+  securitySchemes:
+    CognitoRoleAuthorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: token
+        authorizerUri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${authorizer_arn}/invocations"
+        # La política devuelta cubre TODOS los endpoints del rol, así que es
+        # seguro cachearla por token.
+        authorizerResultTtlInSeconds: 300
+
+x-amazon-apigateway-gateway-responses:
+  ACCESS_DENIED:
+    statusCode: 403
+    responseTemplates:
+      application/json: '{"error":"Tu rol no tiene permiso para este endpoint"}'
+  UNAUTHORIZED:
+    statusCode: 401
+    responseTemplates:
+      application/json: '{"error":"Token ausente, inválido o expirado"}'
+
+paths:
+  /api/documents/upload-url:
+    post:
+      security:
+        - CognitoRoleAuthorizer: []
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${api_lambda_arn}/invocations"
+
+  /api/documents:
+    get:
+      security:
+        - CognitoRoleAuthorizer: []
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${api_lambda_arn}/invocations"
+
+  /api/documents/{documentId}/download-url:
+    get:
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - CognitoRoleAuthorizer: []
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${api_lambda_arn}/invocations"
+
+  /api/consents:
+    post:
+      security:
+        - CognitoRoleAuthorizer: []
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${api_lambda_arn}/invocations"
+
+  /api/medico/patients/{patientId}/documents:
+    get:
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - CognitoRoleAuthorizer: []
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${api_lambda_arn}/invocations"
+
+  /api/me:
+    get:
+      security:
+        - CognitoRoleAuthorizer: []
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${api_lambda_arn}/invocations"
