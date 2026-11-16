@@ -1,10 +1,14 @@
-// Configuracion para desarrollo local. Terraform genera y publica su propia
-// version de config.js con los IDs reales de Cognito al desplegar en AWS.
 window.TELEMED_CONFIG = {
-  mode: "local",
-  region: "local",
+  mode: "aws",
+  region: "us-east-1",
   pools: {
-    medico: { clientId: "local" },
-    paciente: { clientId: "local" },
-  },
+    medico: {
+      userPoolId: "us-east-1_4faUFaOiL",
+      clientId: "racpae3o98fpcoqjq0c0799e9"
+    },
+    paciente: {
+      userPoolId: "us-east-1_NU3NTGtKE",
+      clientId: "2trkhk63fq6smr9cln916g90jf"
+    }
+  }
 };
